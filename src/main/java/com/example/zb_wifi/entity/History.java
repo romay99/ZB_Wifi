@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class History {
     private int historyId;
-    private double historyRocationX;
-    private double historyRocationY;
+    private double historyLocationX;
+    private double historyLocationY;
     private String historyDate;
 }

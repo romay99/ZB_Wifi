@@ -10,5 +10,5 @@ public class BookmarkGroup {
     private String groupName;
     private String groupMakeDate;
     private String groupModifyDate;
-
+    private int groupPriority;
 }

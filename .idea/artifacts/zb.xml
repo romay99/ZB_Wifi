@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="zb">
+    <output-path>$PROJECT_DIR$/out/artifacts/zb_wifi</output-path>
+    <root id="archive" name="zb.war" />
+  </artifact>
+</component>
