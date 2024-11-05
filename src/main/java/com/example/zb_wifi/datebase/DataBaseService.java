@@ -1,5 +1,7 @@
 package com.example.zb_wifi.datebase;
 
+import com.example.zb_wifi.dto.AddBookmarkGroupDto;
+import com.example.zb_wifi.entity.BookmarkGroup;
 import com.example.zb_wifi.entity.History;
 import com.example.zb_wifi.entity.WiFi;
 import com.google.gson.Gson;
@@ -371,6 +373,54 @@ public class DataBaseService {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, id);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * BookmarkGroup List 받는 메서드
+     * @return BookmarkGroup List
+     */
+    static public List<BookmarkGroup> getBookmarkGroupList() {
+        List<BookmarkGroup> list = new ArrayList<>();
+        String sql = "select * from bookmark_group order by group_priority asc";
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                BookmarkGroup bookmarkGroup = new BookmarkGroup();
+                bookmarkGroup.setGroupId(rs.getInt(1));
+                bookmarkGroup.setGroupName(rs.getString(2));
+                bookmarkGroup.setGroupPriority(rs.getInt(3));
+                bookmarkGroup.setGroupMakeDate(rs.getString(4));
+                bookmarkGroup.setGroupModifyDate(rs.getString(5));
+
+                list.add(bookmarkGroup);
+            }
+        } catch (SQLException e) {
+
+        }
+        return list;
+    }
+
+    /**
+     * BookmarkGroup 추가하는 메서드
+     * @param dto 이름 , 그룹순서를 가지고있는 dto
+     */
+    static public void addBookmarkGroup(AddBookmarkGroupDto dto) {
+        String insertSql = "insert into bookmark_group(group_name,group_make_date,group_priority) values(?,?,?)";
+        BookmarkGroup bookmarkGroup = new BookmarkGroup();
+        bookmarkGroup.setGroupName(dto.getGroupName());
+        bookmarkGroup.setGroupMakeDate(LocalDateTime.now().toString());
+        bookmarkGroup.setGroupPriority(dto.getGroupPriority());
+        try {
+            PreparedStatement stmt = connection.prepareStatement(insertSql);
+            stmt.setString(1, dto.getGroupName());
+            stmt.setString(2, bookmarkGroup.getGroupMakeDate());
+            stmt.setInt(3, bookmarkGroup.getGroupPriority());
+
             stmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
