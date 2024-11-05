@@ -1,8 +1,10 @@
 package com.example.zb_wifi.datebase;
 
 import com.example.zb_wifi.dto.AddBookmarkGroupDto;
+import com.example.zb_wifi.dto.BookmarkListResponseDTO;
 import com.example.zb_wifi.entity.BookmarkGroup;
 import com.example.zb_wifi.entity.History;
+import com.example.zb_wifi.entity.JoinGroup;
 import com.example.zb_wifi.entity.WiFi;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -24,7 +26,7 @@ public class DataBaseService {
         getConnection();
     }
 
-    static private void getConnection() {
+    private static void getConnection() {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(dataBaseUrl);
@@ -38,7 +40,7 @@ public class DataBaseService {
     /**
      * DB에 테이블 생성하는 메서드.(테이블이 존재하지 않을때만 실행됨)
      */
-    static public void createTable() {
+    public static void createTable() {
         //wifi 테이블 생성 (존재하지 않을때만)
         String createWifiTable = "create table if not exists wifi(" +
                 "wifi_id integer primary key autoincrement, " +
@@ -79,6 +81,7 @@ public class DataBaseService {
                 "join_group_id integer primary key autoincrement, " +
                 "wifi_id integer, " +
                 "group_id integer, " +
+                "join_group_date text, " +
                 "foreign key (wifi_id) references wifi(wifi_id), " +
                 "foreign key (group_id) references bookmark_group(group_id)" +
                 ");";
@@ -104,7 +107,7 @@ public class DataBaseService {
      *
      * @return WIFI 데이터 갯수 리턴
      */
-    static public int countDbData() {
+    public static int countDbData() {
         int result = -1;
         String countSql = "select count(*) from wifi";
 
@@ -121,7 +124,7 @@ public class DataBaseService {
     /**
      * API 를 이용해 데이터를 DB 에 저장하는 메서드
      */
-    static public void saveWiFiDataToDB(String json) {
+    public static void saveWiFiDataToDB(String json) {
         Gson gson = new Gson();
         try {
             // JSON 문자열을 JsonObject로 변환
@@ -182,7 +185,7 @@ public class DataBaseService {
     /**
      * Wifi 테이블 초기화 시키는 메서드
      */
-    static public void clearWifiTable() {
+    public static void clearWifiTable() {
         // 테이블 초기화
         String clearTableSQL = "delete from wifi";
         try (PreparedStatement stmt = connection.prepareStatement(clearTableSQL)) {
@@ -200,7 +203,7 @@ public class DataBaseService {
      * @param lnt 사용자 경도
      * @return List<Wifi> 반환함
      */
-    static public List<WiFi> getNearWifi(double lat, double lnt) {
+    public static List<WiFi> getNearWifi(double lat, double lnt) {
         String sql = "select * from wifi";
         List<WiFi> wifiList = new ArrayList<>();
         List<WiFi> nearWifiList = new ArrayList<>();
@@ -263,7 +266,7 @@ public class DataBaseService {
      *
      * @return km 단위의 거리 반환
      */
-    static private double getDistance(double lat1, double lnt1, double lat2, double lnt2) {
+    private static double getDistance(double lat1, double lnt1, double lat2, double lnt2) {
         final int R = 6371;
 
         double latDistance = Math.toRadians(lat2 - lat1);
@@ -282,7 +285,7 @@ public class DataBaseService {
      * @param managementNo 관리번호
      * @return wifi class 리턴
      */
-    static public WiFi findWifiByManagementNo(String managementNo) {
+    public static WiFi findWifiByManagementNo(String managementNo) {
         String findSQL = "select * from wifi where wifi_management_number = ?";
         WiFi wifi = new WiFi();
 
@@ -320,7 +323,7 @@ public class DataBaseService {
      * @param x WIFI X 좌표
      * @param y WIFI Y 좌표
      */
-    static void addHistory(double x, double y) {
+    private static void addHistory(double x, double y) {
         String insertHistorySQL = "insert into history(history_location_x,history_location_y,history_date) values(?,?,?)";
         History history = new History();
         history.setHistoryDate(LocalDateTime.now().toString());
@@ -340,7 +343,7 @@ public class DataBaseService {
      * 히스토리 리스트 리턴해주는 메서드
      * @return List<history>
      */
-    static public List<History> getHistoryList() {
+    public static List<History> getHistoryList() {
         String sql = "select * from history";
         List<History> historyList = new ArrayList<>();
 
@@ -368,7 +371,7 @@ public class DataBaseService {
      * 히스토리 삭제하는 메서드
      * @param id History Id
      */
-    static public void deleteHistoryById(int id) {
+    public static void deleteHistoryById(int id) {
         String sql = "delete from history where history_id = ?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -383,7 +386,7 @@ public class DataBaseService {
      * BookmarkGroup List 받는 메서드
      * @return BookmarkGroup List
      */
-    static public List<BookmarkGroup> getBookmarkGroupList() {
+    public static List<BookmarkGroup> getBookmarkGroupList() {
         List<BookmarkGroup> list = new ArrayList<>();
         String sql = "select * from bookmark_group order by group_priority asc";
         try {
@@ -391,11 +394,11 @@ public class DataBaseService {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 BookmarkGroup bookmarkGroup = new BookmarkGroup();
-                bookmarkGroup.setGroupId(rs.getInt(1));
-                bookmarkGroup.setGroupName(rs.getString(2));
-                bookmarkGroup.setGroupPriority(rs.getInt(3));
-                bookmarkGroup.setGroupMakeDate(rs.getString(4));
-                bookmarkGroup.setGroupModifyDate(rs.getString(5));
+                bookmarkGroup.setGroupId(rs.getInt("group_id"));
+                bookmarkGroup.setGroupName(rs.getString("group_name"));
+                bookmarkGroup.setGroupPriority(rs.getInt("group_priority"));
+                bookmarkGroup.setGroupMakeDate(rs.getString("group_make_date"));
+                bookmarkGroup.setGroupModifyDate(rs.getString("group_modify_date"));
 
                 list.add(bookmarkGroup);
             }
@@ -409,7 +412,7 @@ public class DataBaseService {
      * BookmarkGroup 추가하는 메서드
      * @param dto 이름 , 그룹순서를 가지고있는 dto
      */
-    static public void addBookmarkGroup(AddBookmarkGroupDto dto) {
+    public static void addBookmarkGroup(AddBookmarkGroupDto dto) {
         String insertSql = "insert into bookmark_group(group_name,group_make_date,group_priority) values(?,?,?)";
         BookmarkGroup bookmarkGroup = new BookmarkGroup();
         bookmarkGroup.setGroupName(dto.getGroupName());
@@ -422,6 +425,100 @@ public class DataBaseService {
             stmt.setInt(3, bookmarkGroup.getGroupPriority());
 
             stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 북마크에 들어가잇는 wifi 목록 조회하는 메서드
+     * @return JoinGroup 리스트 반환
+     */
+    public static List<BookmarkListResponseDTO> getJoinGroupList() {
+        String sql = "select join_group_id,group_name,wifi_name,join_group_date from join_group,wifi,bookmark_group " +
+                "where join_group.wifi_id = wifi.wifi_id and join_group.group_id = bookmark_group.group_id";
+        List<BookmarkListResponseDTO> list = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                BookmarkListResponseDTO dto = new BookmarkListResponseDTO();
+                dto.setJoinGroupId(rs.getInt("join_group_id"));
+                dto.setBookmarkName(rs.getString("group_name"));
+                dto.setWifiName(rs.getString("wifi_name"));
+                dto.setJoinDate(rs.getString("join_group_date"));
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+    /**
+     * Wifi 데이터를 Group 에 Join 시키는 메서드
+     * @param joinGroup wifiId , groupId , joinGroupDate 로 이루어진 DTO
+     */
+    public static void joinGroup(JoinGroup joinGroup) {
+        String insertSql = "insert into join_group(wifi_id,group_id,join_group_date) values(?,?,?)";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(insertSql);
+            stmt.setInt(1, joinGroup.getWifiId());
+            stmt.setInt(2, joinGroup.getGroupId());
+            stmt.setString(3, joinGroup.getJoinGroupDate());
+
+            stmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * ID 값을 이용해 BookmarkGroup 찾는 메서드
+     * @param id bookmarkGroup ID
+     * @return BookmarkGroup
+     */
+    public static BookmarkGroup findBookmarkGroupById(int id) {
+        String sql = "select * from bookmark_group where group_id = ?";
+        BookmarkGroup bookmarkGroup = new BookmarkGroup();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                bookmarkGroup.setGroupId(rs.getInt("group_id"));
+                bookmarkGroup.setGroupName(rs.getString("group_name"));
+                bookmarkGroup.setGroupMakeDate(rs.getString("group_make_date"));
+                bookmarkGroup.setGroupPriority(rs.getInt("group_priority"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookmarkGroup;
+    }
+
+
+    /**
+     * BookmarkGroup 수정하는 메서드
+     * @param bookmarkGroup jsp 에서 넘어오는 새로운 BookmarkGroup 엔티티
+     */
+    public static void editBookmarkGroup(BookmarkGroup bookmarkGroup) {
+        bookmarkGroup.setGroupModifyDate(LocalDateTime.now().toString());
+        String sql = "update bookmark_group set group_name = ?, group_priority = ? ,group_modify_date = ? where group_id = ?";
+        System.out.println("bookmarkGroup = " + bookmarkGroup);
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, bookmarkGroup.getGroupName());
+            stmt.setInt(2, bookmarkGroup.getGroupPriority());
+            stmt.setString(3, bookmarkGroup.getGroupModifyDate());
+            stmt.setInt(4, bookmarkGroup.getGroupId());
+
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

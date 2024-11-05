@@ -1,7 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.example.zb_wifi.entity.WiFi" %>
+<%@ page import="com.example.zb_wifi.entity.BookmarkGroup" %>
+<%@ page import="java.util.List" %>
 <%
     WiFi wifi = (WiFi) request.getAttribute("wifi");
+%>
+<%
+    List<BookmarkGroup> bookmarkGroupList = (List<BookmarkGroup>) request.getAttribute("groupList");
 %>
 <html>
 <head>
@@ -12,8 +17,17 @@
     <a href="index.jsp">홈</a>
     <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a>
     <a href="<%= request.getContextPath() %>/wifi">Open API 와이파이 정보 가져오기</a>
-    <a href="<%= request.getContextPath() %>/">즐겨 찾기 보기</a>
+    <a href="<%= request.getContextPath() %>/bookmarkList">즐겨 찾기 보기</a>
     <a href="<%= request.getContextPath() %>/groupList">즐겨 찾기 그룹 관리</a>
+</div>
+<div>
+    <select name="bookmarkGroup">
+        <option value="">북마크 그룹 이름 선택</option>
+        <% for (BookmarkGroup group : bookmarkGroupList) { %>
+        <option name ="bookmarkGroup" id="bookmarkGroup" value="<%= group.getGroupId() %>"><%= group.getGroupName() %></option>
+        <% } %>
+    </select>
+    <button onclick="joinBookmark()">북마크 추가하기</button>
 </div>
 <table>
     <tr>
@@ -22,7 +36,7 @@
     </tr>
     <tr>
         <th>관리번호</th>
-        <td class="right-align"><%= wifi.getWifiId() %></td>
+        <td class="right-align"><%= wifi.getWifiManagementNumber() %></td>
     </tr>
     <tr>
         <th>자치구</th>
@@ -85,5 +99,36 @@
         <td class="right-align"><%= wifi.getWifiWorkDateTime() %></td>
     </tr>
 </table>
+<script>
+    function joinBookmark() {
+        const bookmarkGroupId = document.getElementById("bookmarkGroup").value;
+        const wifiId = <%= wifi.getWifiId() %>;
+
+        if (!bookmarkGroupId) {
+            alert("북마크 그룹을 선택하세요");
+            return;
+        }
+
+        fetch("/bookmark-add-submit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                groupId: bookmarkGroupId,
+                wifiId: wifiId,
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("북마크 정보를 추가하였습니다.");
+                    window.location.href = "/bookmarkList";
+                } else {
+                    alert("북마크 추가에 실패했습니다.");
+                }
+            })
+    }
+
+</script>
 </body>
 </html>
