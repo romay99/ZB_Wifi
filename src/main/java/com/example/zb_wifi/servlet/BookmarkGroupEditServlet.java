@@ -23,7 +23,6 @@ public class BookmarkGroupEditServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("이거실행 = ");
         Gson gson = new Gson();
         BookmarkGroup bookmarkGroup = gson.fromJson(request.getReader(), BookmarkGroup.class);
         DataBaseService.editBookmarkGroup(bookmarkGroup);

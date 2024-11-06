@@ -43,7 +43,7 @@
         <td><%= dto.getBookmarkName()%></td>
         <td><%= dto.getWifiName()%></td>
         <td><%= dto.getJoinDate()%></td>
-        <td><a>삭제</a></td>
+        <td><a href="/bookmark-delete?id=<%= dto.getJoinGroupId()%>">삭제</a></td>
     </tr>
     <%
             }

@@ -35,7 +35,7 @@
         fetch("http://localhost:8080/bookmark", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 groupName: groupName,

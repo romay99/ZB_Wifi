@@ -9,7 +9,7 @@
     <title>와이파이 정보 구하기</title>
 </head>
 <body>
-<h1>북마크 그룹</h1>
+<h1>북마크 그룹 목록</h1>
 <div>
     <a href="index.jsp">홈</a>
     <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a>
@@ -46,7 +46,7 @@
         <td><%= bookmarkGroup.getGroupModifyDate() == null ? "" : bookmarkGroup.getGroupModifyDate()%></td>
         <td>
             <a href="/bookmark-group-edit?id=<%= bookmarkGroup.getGroupId()%>">수정</a>
-            <a>삭제</a>
+            <a href="/bookmark-group-delete?id=<%= bookmarkGroup.getGroupId()%>">삭제</a>
         </td>
     </tr>
     <%

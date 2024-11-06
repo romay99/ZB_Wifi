@@ -523,4 +523,76 @@ public class DataBaseService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * ID 값으로 BookmarkGroup 삭제하는 메서드
+     * @param id BookmarkGroup ID
+     * @return 삭제된 데이터갯수 반환. (1 이 정상처리)
+     */
+    public static int deleteBookmarkGroupById(int id) {
+        String sql = "delete from bookmark_group where group_id = ?";
+        int result = 0;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            result = stmt.executeUpdate();
+            if (result <= 0) {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * Bookmark 를 삭제하는 메서드
+     * @param id Bookmark ID
+     * @return 처리된 데이터 갯수( 1이 정상 )
+     */
+    public static int deleteBookmarkById(int id) {
+        String sql = "delete from join_group where join_group_id = ?";
+        int result = 0;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            result = stmt.executeUpdate();
+            if (result <= 0) {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    /**
+     * ID 값을 이용해 북마크 페이지에 필요한 DTO 를 리턴하는 메소드.
+     * @param id DTO ID
+     * @return DTO : group_id , group_name , wifi_name , join_group_date
+     */
+    public static BookmarkListResponseDTO findBookmarkById(int id) {
+        String sql = "select join_group_id,group_name,wifi_name,join_group_date from join_group,wifi,bookmark_group " +
+                "where join_group.wifi_id = wifi.wifi_id and join_group.group_id = bookmark_group.group_id " +
+                "and join_group.join_group_id = ?";
+
+        BookmarkListResponseDTO dto = new BookmarkListResponseDTO();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                dto.setJoinGroupId(rs.getInt("join_group_id"));
+                dto.setBookmarkName(rs.getString("group_name"));
+                dto.setWifiName(rs.getString("wifi_name"));
+                dto.setJoinDate(rs.getString("join_group_date"));
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dto;
+    }
 }
+

@@ -10,5 +10,4 @@ public class JoinGroup {
     private int wifiId;
     private int groupId;
     private String joinGroupDate;
-
 }
