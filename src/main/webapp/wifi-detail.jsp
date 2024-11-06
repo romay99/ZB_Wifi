@@ -11,13 +11,16 @@
 <html>
 <head>
     <title>와이파이 정보 구하기</title>
+    <link rel="stylesheet" href="verticalTable.css">
 </head>
+<link>
 <body>
+<h1>와이파이 정보 구하기</h1>
 <div>
-    <a href="index.jsp">홈</a>
-    <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a>
-    <a href="<%= request.getContextPath() %>/wifi">Open API 와이파이 정보 가져오기</a>
-    <a href="<%= request.getContextPath() %>/bookmarkList">즐겨 찾기 보기</a>
+    <a href="index.jsp">홈</a> |
+    <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a> |
+    <a href="<%= request.getContextPath() %>/wifi">Open API 와이파이 정보 가져오기</a> |
+    <a href="<%= request.getContextPath() %>/bookmarkList">즐겨 찾기 보기</a> |
     <a href="<%= request.getContextPath() %>/groupList">즐겨 찾기 그룹 관리</a>
 </div>
 <div>
@@ -27,7 +30,7 @@
         <option name ="bookmarkGroup" id="bookmarkGroup" value="<%= group.getGroupId() %>"><%= group.getGroupName() %></option>
         <% } %>
     </select>
-    <button onclick="joinBookmark()">북마크 추가하기</button>
+    <button onclick="joinBookmark()" id="addButton">북마크 추가하기</button>
 </div>
 <table>
     <tr>

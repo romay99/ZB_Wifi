@@ -26,7 +26,7 @@ public class HistoryServlet extends HttpServlet {
             int id = Integer.parseInt(historyId[1]);
             DataBaseService.deleteHistoryById(id);
 
-            response.sendRedirect("/");
+            response.sendRedirect("/history");
         }
     }
 }

@@ -6,21 +6,24 @@
 <head>
     <title>와이파이 정보 구하기</title>
 </head>
+<link rel="stylesheet" href="horizonTable.css">
 <body>
 <h1>와이파이 정보 구하기</h1>
 <div>
-    <a href="index.jsp">홈</a>
-    <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a>
-    <a href="<%= request.getContextPath() %>/wifi">Open API 와이파이 정보 가져오기</a>
-    <a href="<%= request.getContextPath() %>/bookmarkList">즐겨 찾기 보기</a>
+    <a href="index.jsp">홈</a> |
+    <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a> |
+    <a href="<%= request.getContextPath() %>/wifi">Open API 와이파이 정보 가져오기</a> |
+    <a href="<%= request.getContextPath() %>/bookmarkList">즐겨 찾기 보기</a> |
     <a href="<%= request.getContextPath() %>/groupList">즐겨 찾기 그룹 관리</a>
 </div>
-<label for="LAT">LAT:</label>
-<input type="text" id="LAT" name="LAT">
-<label for="LNT">LNT:</label>
-<input type="text" id="LNT" name="LNT">
-<button onclick="getLocation()">내 위치 가져오기</button>
-<button onclick="getNearWifi()">근처 WIFI 정보 보기</button>
+<div>
+    <label for="LAT">LAT:</label>
+    <input type="text" id="LAT" name="LAT">
+    <label for="LNT">LNT:</label>
+    <input type="text" id="LNT" name="LNT">
+    <button onclick="getLocation()">내 위치 가져오기</button>
+    <button onclick="getNearWifi()">근처 WIFI 정보 보기</button>
+</div>
 
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.zb_wifi.entity.WiFi" %>
@@ -49,11 +52,10 @@
         <th>작업일자</th>
     </tr>
     <%
-        // nearWifiList가 null인지 확인
         if (nearWifiList == null || nearWifiList.isEmpty()) {
     %>
     <tr>
-        <td colspan="16" style="text-align: center;">근처 WiFi 정보가 없습니다.</td>
+        <td colspan="16" style="text-align: center;">위치 정보를 입력한 후에 조회해 주세요.</td>
     </tr>
     <%
     } else {

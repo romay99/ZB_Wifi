@@ -1,0 +1,32 @@
+div{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+table{
+    width: 100%;
+}
+th{
+    background-color: rgba(28, 100, 20, 0.87);
+    color : white;
+    width: 20%;
+}
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+tr:nth-child(odd) {
+    background-color: rgba(236, 233, 233, 0.4);
+}
+
+tr{
+    height: 40px;
+}
+.addButton{
+    margin-bottom: 10px;
+}
+tr:hover{
+    background-color: #e9ffff;
+}
+#deleteBtnCell{
+    text-align: center;
+}

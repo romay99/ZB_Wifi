@@ -7,14 +7,15 @@
 <html>
 <head>
     <title>와이파이 정보 구하기</title>
+    <link rel="stylesheet" href="horizonTable.css">
 </head>
 <body>
 <h1>북마크 그룹 목록</h1>
 <div>
-    <a href="index.jsp">홈</a>
-    <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a>
-    <a href="<%= request.getContextPath() %>/wifi">Open API 와이파이 정보 가져오기</a>
-    <a href="<%= request.getContextPath() %>/bookmarkList">즐겨 찾기 보기</a>
+    <a href="index.jsp">홈</a> |
+    <a href="<%= request.getContextPath() %>/history">위치 히스토리 목록</a> |
+    <a href="<%= request.getContextPath() %>/wifi">Open API 와이파이 정보 가져오기</a> |
+    <a href="<%= request.getContextPath() %>/bookmarkList">즐겨 찾기 보기</a> |
     <a href="<%= request.getContextPath() %>/groupList">즐겨 찾기 그룹 관리</a>
 </div>
 <button onclick="goToAddBookmarkGroupPage()">북마크 그룹 이름 추가</button>
@@ -44,8 +45,8 @@
         <td><%= bookmarkGroup.getGroupPriority() %></td>
         <td><%= bookmarkGroup.getGroupMakeDate() %></td>
         <td><%= bookmarkGroup.getGroupModifyDate() == null ? "" : bookmarkGroup.getGroupModifyDate()%></td>
-        <td>
-            <a href="/bookmark-group-edit?id=<%= bookmarkGroup.getGroupId()%>">수정</a>
+        <td id="deleteBtnCell">
+            <a href="/bookmark-group-edit?id=<%= bookmarkGroup.getGroupId()%>">수정</a> |
             <a href="/bookmark-group-delete?id=<%= bookmarkGroup.getGroupId()%>">삭제</a>
         </td>
     </tr>
