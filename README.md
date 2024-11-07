@@ -17,12 +17,13 @@ Mission 1 : 데이터 베이스/자바 기반 Pure 자바 프로젝트 과제
 
 
 # Dependency
+* Java Servlet API 4.0
 * OKHttp 3.2.0
 * Gson 2.7
 * Lombok 1.18.34
 * Sqlite JDBC 3.42.0.0
   
- Reference
+# API Reference
 > https://data.seoul.go.kr/dataList/OA-20883/S/1/datasetView.do
 
 
