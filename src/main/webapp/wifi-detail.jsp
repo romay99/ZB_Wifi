@@ -24,10 +24,10 @@
     <a href="<%= request.getContextPath() %>/groupList">즐겨 찾기 그룹 관리</a>
 </div>
 <div>
-    <select name="bookmarkGroup">
+    <select id="bookmarkGroup" name="bookmarkGroup">
         <option value="">북마크 그룹 이름 선택</option>
         <% for (BookmarkGroup group : bookmarkGroupList) { %>
-        <option name ="bookmarkGroup" id="bookmarkGroup" value="<%= group.getGroupId() %>"><%= group.getGroupName() %></option>
+        <option value="<%= group.getGroupId() %>"><%= group.getGroupName() %></option>
         <% } %>
     </select>
     <button onclick="joinBookmark()" id="addButton">북마크 추가하기</button>
@@ -106,6 +106,7 @@
     function joinBookmark() {
         const bookmarkGroupId = document.getElementById("bookmarkGroup").value;
         const wifiId = <%= wifi.getWifiId() %>;
+        console.log(bookmarkGroupId)
 
         if (!bookmarkGroupId) {
             alert("북마크 그룹을 선택하세요");

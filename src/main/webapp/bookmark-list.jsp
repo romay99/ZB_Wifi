@@ -1,4 +1,3 @@
-<%@ page import="com.example.zb_wifi.entity.JoinGroup" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.zb_wifi.dto.BookmarkListResponseDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

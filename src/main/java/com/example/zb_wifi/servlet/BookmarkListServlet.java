@@ -2,7 +2,6 @@ package com.example.zb_wifi.servlet;
 
 import com.example.zb_wifi.datebase.DataBaseService;
 import com.example.zb_wifi.dto.BookmarkListResponseDTO;
-import com.example.zb_wifi.entity.JoinGroup;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
