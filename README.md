@@ -12,6 +12,10 @@ Mission 1 : 데이터 베이스/자바 기반 Pure 자바 프로젝트 과제
 * 조회한 WiFi 데이터를 저장하는 History 기능
 * 조회한 Wifi 데이터를 북마크에 넣을 수 있는 Bookmark 기능
 
+# ERD
+![ex_ERD](./ERD.png)
+
+
 # Dependency
 * OKHttp 3.2.0
 * Gson 2.7
